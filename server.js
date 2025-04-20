@@ -6,6 +6,9 @@ const pool = require('./db/db'); // Correct path to db.js
 
 const app = express();
 
+const cors = require('cors');
+app.use(cors());
+
 // Middleware
 app.use(cors());
 app.use(express.json());
