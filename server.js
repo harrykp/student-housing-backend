@@ -1,31 +1,40 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const cors = require('cors');
-const dotenv = require('dotenv');
+const path = require('path');
+require('dotenv').config(); // Load environment variables
+const pool = require('./db'); // Database connection
 
-// Load environment variables
-dotenv.config();
-
-// Initialize app
 const app = express();
-const PORT = process.env.PORT || 5000;
 
 // Middleware
-app.use(bodyParser.json());
 app.use(cors());
+app.use(express.json());
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Routes
-const hostelRoutes = require('./routes/hostels');
-const roomRoutes = require('./routes/rooms');
-const applicationRoutes = require('./routes/applications');
-const dashboardRoutes = require('./routes/dashboard');
+const hostelsRoute = require('./routes/hostels');
+const roomsRoute = require('./routes/rooms');
+const applicationsRoute = require('./routes/applications');
+const dashboardRoute = require('./routes/dashboard');
 
-app.use('/api/hostels', hostelRoutes);
-app.use('/api/rooms', roomRoutes);
-app.use('/api/applications', applicationRoutes);
-app.use('/api/dashboard', dashboardRoutes);
+app.use('/api/hostels', hostelsRoute);
+app.use('/api/rooms', roomsRoute);
+app.use('/api/applications', applicationsRoute);
+app.use('/api/dashboard', dashboardRoute);
 
-// Start server
+// Health Check
+app.get('/', (req, res) => {
+    res.send('Backend server is running!');
+});
+
+// Error Handling
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).json({ error: 'Something went wrong!' });
+});
+
+// Start the Server
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
+    console.log(`Server is running on port ${PORT}`);
 });
