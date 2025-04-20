@@ -1,4 +1,4 @@
-const db = require('./index'); // Assuming 'index.js' initializes the database connection
+const db = require('./db'); // Assuming 'db.js' initializes the database connection
 const bcrypt = require('bcrypt');
 
 (async () => {
@@ -31,11 +31,11 @@ const bcrypt = require('bcrypt');
     const hashedPassword = await bcrypt.hash('password123', 10);
     await db.query(`
       INSERT INTO students (name, email, password)
-      VALUES
+      VALUES 
         ('Alice Johnson', 'alice@example.com', $1),
-        ('Bob Smith', 'bob@example.com', $1),
-        ('Charlie Brown', 'charlie@example.com', $1)
-    `, [hashedPassword]);
+        ('Bob Smith', 'bob@example.com', $2),
+        ('Charlie Brown', 'charlie@example.com', $3)
+    `, [hashedPassword, hashedPassword, hashedPassword]);
 
     // 4. Insert example applications
     console.log('Seeding applications...');
@@ -52,15 +52,20 @@ const bcrypt = require('bcrypt');
     const hashedAdminPassword = await bcrypt.hash('admin123', 10);
     await db.query(`
       INSERT INTO admins (name, email, password, role)
-      VALUES
+      VALUES 
         ('Admin User', 'admin@example.com', $1, 'admin'),
-        ('Manager User', 'manager@example.com', $1, 'manager')
-    `, [hashedAdminPassword]);
+        ('Manager User', 'manager@example.com', $2, 'manager')
+    `, [hashedAdminPassword, hashedAdminPassword]);
 
     console.log('Database seeding completed successfully!');
   } catch (error) {
-    console.error('Error seeding database:', error);
+    console.error('Error seeding database:', error.stack);
   } finally {
-    db.end(); // Close the database connection
+    try {
+      await db.end(); // Close the database connection
+      console.log("Database connection closed.");
+    } catch (err) {
+      console.error("Error closing database connection:", err);
+    }
   }
 })();
