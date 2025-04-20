@@ -38,3 +38,13 @@ const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Server is running on port ${PORT}`);
 });
+
+const pool = require('./db/db');
+
+pool.query('SELECT NOW()', (err, res) => {
+    if (err) {
+        console.error('Database connection failed:', err);
+    } else {
+        console.log('Database connected:', res.rows);
+    }
+});
