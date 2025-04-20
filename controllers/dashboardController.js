@@ -1,4 +1,4 @@
-const db = require('../db');
+const db = require('../db/db'');
 
 // Get student's dashboard data
 exports.getStudentDashboard = async (req, res) => {
