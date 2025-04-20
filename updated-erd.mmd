@@ -1,0 +1,53 @@
+```mermaid
+erDiagram
+    HOSTELS {
+        int id PK
+        string name
+        string address
+        datetime created_at
+    }
+    ROOMS {
+        int id PK
+        int hostel_id FK
+        string name
+        string photo_url
+        string description
+        int occupancy_limit
+        boolean available
+        datetime created_at
+    }
+    STUDENTS {
+        int id PK
+        string name
+        string email
+        string password
+        datetime created_at
+    }
+    APPLICATIONS {
+        int id PK
+        int student_id FK
+        int room_id FK
+        string status
+        datetime applied_at
+    }
+    ADMINS {
+        int id PK
+        string name
+        string email
+        string password
+        string role
+        datetime created_at
+    }
+    ACTIVITY_LOGS {
+        int id PK
+        int actor_id
+        string actor_role
+        string action
+        datetime timestamp
+    }
+
+    HOSTELS ||--o{ ROOMS : contains
+    ROOMS ||--o{ APPLICATIONS : associated_with
+    STUDENTS ||--o{ APPLICATIONS : submits
+    ADMINS ||--o{ ACTIVITY_LOGS : generates
+```
