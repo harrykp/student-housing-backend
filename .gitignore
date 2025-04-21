@@ -4,6 +4,10 @@ node_modules/
 # Environment variables
 .env
 
+# OLD files
+OLDenv.env
+
+
 # Logs
 logs/
 *.log
