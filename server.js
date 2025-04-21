@@ -6,7 +6,6 @@ const pool = require('./db/db'); // Correct path to db.js
 
 const app = express();
 
-
 // Middleware
 app.use(cors());
 app.use(express.json());
@@ -17,11 +16,17 @@ const hostelsRoute = require('./routes/hostels');
 const roomsRoute = require('./routes/rooms');
 const applicationsRoute = require('./routes/applications');
 const dashboardRoute = require('./routes/dashboard');
+const studentsRoute = require('./routes/students'); // New route for student registration
+const authRoute = require('./routes/auth'); // New route for authentication
+const housingRoute = require('./routes/housing'); // New route for housing options
 
 app.use('/api/hostels', hostelsRoute);
 app.use('/api/rooms', roomsRoute);
 app.use('/api/applications', applicationsRoute);
 app.use('/api/dashboard', dashboardRoute);
+app.use('/api/students', studentsRoute); // Register new endpoint
+app.use('/api/auth', authRoute); // Register new endpoint
+app.use('/api/housing', housingRoute); // Register new endpoint
 
 // Health Check
 app.get('/', (req, res) => {
