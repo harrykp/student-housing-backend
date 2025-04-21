@@ -15,6 +15,7 @@ app.use(express.static(path.join(__dirname, 'public')));
 const hostelsRoute = require('./routes/hostels');
 const roomsRoute = require('./routes/rooms');
 const applicationsRoute = require('./routes/applications');
+const applicationRoute = require('./routes/application');
 const dashboardRoute = require('./routes/dashboard');
 const studentsRoute = require('./routes/students'); // New route for student registration
 const authRoute = require('./routes/auth'); // New route for authentication
@@ -23,6 +24,7 @@ const housingRoute = require('./routes/housing'); // New route for housing optio
 app.use('/api/hostels', hostelsRoute);
 app.use('/api/rooms', roomsRoute);
 app.use('/api/applications', applicationsRoute);
+app.use('/api/application', applicationRoute);
 app.use('/api/dashboard', dashboardRoute);
 app.use('/api/students', studentsRoute); // Register new endpoint
 app.use('/api/auth', authRoute); // Register new endpoint
