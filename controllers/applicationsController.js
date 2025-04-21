@@ -1,6 +1,7 @@
 const db = require('../db/db');
+const { createNotification } = require('./notificationsController');
 
-// Controller for submitting a housing application
+// Submit a housing application
 const submitApplication = async (req, res) => {
     const { studentId, roomPreference, personalDetails } = req.body;
 
@@ -14,24 +15,44 @@ const submitApplication = async (req, res) => {
             [studentId, roomPreference, personalDetails]
         );
         res.status(201).json({ message: 'Application submitted successfully.' });
+
+        // Log activity
+        await addActivityLog(studentId, 'student', 'Submitted housing application', { roomPreference });
+
     } catch (error) {
         console.error('Error submitting application:', error.message);
-        res.status(500).json({ message: 'Server error.' });
+        res.status(500).json({ message: 'Failed to submit application.' });
     }
 };
 
-// Controller for fetching all applications (optional for admin)
-const getApplications = async (req, res) => {
+// Update application status and notify student
+const updateApplicationStatus = async (req, res) => {
+    const { applicationId, status } = req.body;
+
     try {
-        const applications = await db.query('SELECT * FROM applications');
-        res.status(200).json(applications.rows);
+        // Update status
+        await db.query('UPDATE applications SET status = $1 WHERE id = $2', [status, applicationId]);
+
+        // Fetch application details
+        const application = await db.query('SELECT student_id FROM applications WHERE id = $1', [applicationId]);
+        const studentId = application.rows[0].student_id;
+
+        // Notify student
+        const message = `Your application status has been updated to: ${status}`;
+        await createNotification(studentId, 'student', message, 'alert');
+
+        res.status(200).json({ message: 'Application status updated and student notified.' });
+
+        // Log activity
+        await addActivityLog(studentId, 'admin', `Updated application status to ${status}`);
+
     } catch (error) {
-        console.error('Error fetching applications:', error.message);
-        res.status(500).json({ message: 'Server error.' });
+        console.error('Error updating application status:', error.message);
+        res.status(500).json({ message: 'Failed to update application status.' });
     }
 };
 
 module.exports = {
     submitApplication,
-    getApplications,
+    updateApplicationStatus,
 };
