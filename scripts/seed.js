@@ -1,4 +1,4 @@
-const db = require('./db'); // Ensure 'db.js' initializes the database connection
+const db = require('../db'); // Ensure 'db.js' initializes the database connection
 const bcrypt = require('bcrypt');
 
 (async () => {
