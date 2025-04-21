@@ -1,4 +1,4 @@
-const db = require('./db'); // Assuming 'db.js' initializes the database connection
+const db = require('./db'); // Ensure 'db.js' initializes the database connection
 const bcrypt = require('bcrypt');
 
 (async () => {
@@ -10,21 +10,30 @@ const bcrypt = require('bcrypt');
     await db.query(`
       INSERT INTO hostels (name, address)
       VALUES 
-        ('Green Valley Hostel', '123 Green Street'),
-        ('Sunrise Hostel', '456 Orange Avenue'),
-        ('Blue Horizon Hostel', '789 Blue Road')
-    `);
+        ($1, $2),
+        ($3, $4),
+        ($5, $6)
+    `, [
+      'Green Valley Hostel', '123 Green Street',
+      'Sunrise Hostel', '456 Orange Avenue',
+      'Blue Horizon Hostel', '789 Blue Road'
+    ]);
 
     // 2. Insert example rooms
     console.log('Seeding rooms...');
     await db.query(`
       INSERT INTO rooms (hostel_id, name, photo_url, description, occupancy_limit, available)
       VALUES 
-        (1, 'Room 101', 'https://example.com/room101.jpg', 'Single room with ensuite bathroom', 1, true),
-        (1, 'Room 102', 'https://example.com/room102.jpg', 'Double room with shared bathroom', 2, true),
-        (2, 'Room 201', 'https://example.com/room201.jpg', 'Triple room with balcony', 3, true),
-        (3, 'Room 301', 'https://example.com/room301.jpg', 'Quadruple room with garden view', 4, true)
-    `);
+        ($1, $2, $3, $4, $5, $6),
+        ($7, $8, $9, $10, $11, $12),
+        ($13, $14, $15, $16, $17, $18),
+        ($19, $20, $21, $22, $23, $24)
+    `, [
+      1, 'Room 101', 'https://example.com/room101.jpg', 'Single room with ensuite bathroom', 1, true,
+      1, 'Room 102', 'https://example.com/room102.jpg', 'Double room with shared bathroom', 2, true,
+      2, 'Room 201', 'https://example.com/room201.jpg', 'Triple room with balcony', 3, true,
+      3, 'Room 301', 'https://example.com/room301.jpg', 'Quadruple room with garden view', 4, true
+    ]);
 
     // 3. Insert example students
     console.log('Seeding students...');
@@ -32,20 +41,28 @@ const bcrypt = require('bcrypt');
     await db.query(`
       INSERT INTO students (name, email, password)
       VALUES 
-        ('Alice Johnson', 'alice@example.com', $1),
-        ('Bob Smith', 'bob@example.com', $2),
-        ('Charlie Brown', 'charlie@example.com', $3)
-    `, [hashedPassword, hashedPassword, hashedPassword]);
+        ($1, $2, $3),
+        ($4, $5, $6),
+        ($7, $8, $9)
+    `, [
+      'Alice Johnson', 'alice@example.com', hashedPassword,
+      'Bob Smith', 'bob@example.com', hashedPassword,
+      'Charlie Brown', 'charlie@example.com', hashedPassword
+    ]);
 
     // 4. Insert example applications
     console.log('Seeding applications...');
     await db.query(`
       INSERT INTO applications (student_id, room_id, status, applied_at)
       VALUES
-        (1, 1, 'Accepted', NOW()),
-        (2, 2, 'Pending', NOW()),
-        (3, 3, 'Rejected', NOW())
-    `);
+        ($1, $2, $3, NOW()),
+        ($4, $5, $6, NOW()),
+        ($7, $8, $9, NOW())
+    `, [
+      1, 1, 'Accepted',
+      2, 2, 'Pending',
+      3, 3, 'Rejected'
+    ]);
 
     // 5. Insert example admins
     console.log('Seeding admins...');
@@ -53,9 +70,12 @@ const bcrypt = require('bcrypt');
     await db.query(`
       INSERT INTO admins (name, email, password, role)
       VALUES 
-        ('Admin User', 'admin@example.com', $1, 'admin'),
-        ('Manager User', 'manager@example.com', $2, 'manager')
-    `, [hashedAdminPassword, hashedAdminPassword]);
+        ($1, $2, $3, $4),
+        ($5, $6, $7, $8)
+    `, [
+      'Admin User', 'admin@example.com', hashedAdminPassword, 'admin',
+      'Manager User', 'manager@example.com', hashedAdminPassword, 'manager'
+    ]);
 
     console.log('Database seeding completed successfully!');
   } catch (error) {
