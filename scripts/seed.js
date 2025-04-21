@@ -4,6 +4,9 @@ const bcrypt = require('bcrypt');
 (async () => {
   try {
     console.log('Seeding database...');
+    // Truncate all tables
+    console.log('Clearing existing data...');
+    await db.query('TRUNCATE TABLE hostels, rooms, students, applications RESTART IDENTITY CASCADE');
 
     // 1. Insert example hostels
     console.log('Seeding hostels...');
@@ -14,9 +17,9 @@ const bcrypt = require('bcrypt');
         ($3, $4),
         ($5, $6)
     `, [
-      'Green Valley Hostel', '123 Green Street',
-      'Sunrise Hostel', '456 Orange Avenue',
-      'Blue Horizon Hostel', '789 Blue Road'
+      'Pounds Villa Hostel', '123 Street',
+      'A-City Hostel', '456 Avenue',
+      'JD Hostel', '789 Road'
     ]);
 
     // 2. Insert example rooms
@@ -45,9 +48,9 @@ const bcrypt = require('bcrypt');
         ($4, $5, $6),
         ($7, $8, $9)
     `, [
-      'Alice Johnson', 'alice@example.com', hashedPassword,
-      'Bob Smith', 'bob@example.com', hashedPassword,
-      'Charlie Brown', 'charlie@example.com', hashedPassword
+      'Apryl Poku', 'apryl@example.com', hashedPassword,
+      'Linda Osei', 'linda@example.com', hashedPassword,
+      'Kofi Kinatta', 'kofi@example.com', hashedPassword
     ]);
 
     // 4. Insert example applications
