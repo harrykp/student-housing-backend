@@ -20,6 +20,8 @@ const dashboardRoute = require('./routes/dashboard');
 const studentsRoute = require('./routes/students'); // New route for student registration
 const authRoute = require('./routes/auth'); // New route for authentication
 const housingRoute = require('./routes/housing'); // New route for housing options
+const activityLogsRoute = require('./routes/activityLogs');
+const notificationsRoute = require('./routes/notifications');
 
 app.use('/api/hostels', hostelsRoute);
 app.use('/api/rooms', roomsRoute);
@@ -29,6 +31,8 @@ app.use('/api/dashboard', dashboardRoute);
 app.use('/api/students', studentsRoute); // Register new endpoint
 app.use('/api/auth', authRoute); // Register new endpoint
 app.use('/api/housing', housingRoute); // Register new endpoint
+app.use('/api/activity-logs', activityLogsRoute);
+app.use('/api/notifications', notificationsRoute);
 
 // Health Check
 app.get('/', (req, res) => {
