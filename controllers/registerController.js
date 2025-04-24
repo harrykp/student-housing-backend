@@ -12,7 +12,7 @@ const registerStudent = async (req, res) => {
         // Check if student already exists
         const studentExists = await db.query('SELECT * FROM students WHERE email = $1', [email]);
         if (studentExists.rows.length > 0) {
-            return res.status(400).json({ message: 'Student already exists.' });
+            return res.status(400).json({ message: 'User already exists.' });
         }
 
         // Insert new student
