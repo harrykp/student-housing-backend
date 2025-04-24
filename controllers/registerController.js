@@ -1,7 +1,7 @@
 const db = require('../db/db');
 
-// Controller for registering a new student
-const registerStudent = async (req, res) => {
+// Controller for registering a new User
+const registerUser = async (req, res) => {
     const { name, email, phone, password } = req.body;
 
     if (!name || !email || !phone || !password) {
@@ -9,13 +9,13 @@ const registerStudent = async (req, res) => {
     }
 
     try {
-        // Check if student already exists
+        // Check if User already exists
         const studentExists = await db.query('SELECT * FROM users WHERE email = $1', [email]);
         if (studentExists.rows.length > 0) {
             return res.status(400).json({ message: 'User already exists.' });
         }
 
-        // Insert new student
+        // Insert new User
         await db.query(
             'INSERT INTO users (name, email, phone, password) VALUES ($1, $2, $3, $4)',
             [name, email, phone, password]
