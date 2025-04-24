@@ -1,8 +1,8 @@
 const db = require('./db');
 
-// Example script: Fetch all students
+// Example script: Fetch all users
 (async () => {
-  console.log('Fetching all students...');
-  const result = await db.query('SELECT * FROM students');
+  console.log('Fetching all users...');
+  const result = await db.query('SELECT * FROM users');
   console.log(result.rows);
 })();
