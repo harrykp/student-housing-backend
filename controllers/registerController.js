@@ -2,9 +2,9 @@ const db = require('../db/db');
 
 // Controller for registering a new student
 const registerStudent = async (req, res) => {
-    const { name, email, password } = req.body;
+    const { name, email, phone, password } = req.body;
 
-    if (!name || !email || !password) {
+    if (!name || !email || !phone || !password) {
         return res.status(400).json({ message: 'All fields are required.' });
     }
 
@@ -17,12 +17,12 @@ const registerStudent = async (req, res) => {
 
         // Insert new student
         await db.query(
-            'INSERT INTO students (name, email, password) VALUES ($1, $2, $3)',
-            [name, email, password]
+            'INSERT INTO users (name, email, phone,password) VALUES ($1, $2, $3, $4)',
+            [name, email, phone, password]
         );
-        res.status(201).json({ message: 'Student registered successfully.' });
+        res.status(201).json({ message: 'User registered successfully.' });
     } catch (error) {
-        console.error('Error registering student:', error.message);
+        console.error('Error registering user:', error.message);
         res.status(500).json({ message: 'Server error.' });
     }
 };
