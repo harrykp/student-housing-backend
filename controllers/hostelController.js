@@ -1,4 +1,4 @@
-const db = require('../db/db');
+const db = require('../db');
 
 // Get all hostels
 exports.getHostels = async (req, res) => {
