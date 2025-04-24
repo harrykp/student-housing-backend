@@ -1,18 +1,25 @@
-const db = require('../db/db');
+const db = require('../db');
 
-// Update room availability count
-const updateRoomAvailability = async (roomId, increment = -1) => {
-    try {
-        await db.query(
-            'UPDATE rooms SET available_count = available_count + $1 WHERE id = $2 AND available_count + $1 >= 0',
-            [increment, roomId]
-        );
-    } catch (error) {
-        console.error('Error updating room availability:', error.message);
-        throw new Error('Failed to update room availability.');
-    }
+const getRooms = async (req, res) => {
+  try {
+    const result = await db.query('SELECT * FROM rooms');
+    res.json(result.rows);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
 
-module.exports = {
-    updateRoomAvailability,
+const createRoom = async (req, res) => {
+  const { hostel_id, name, photo_url, description, occupancy_limit, available, created_at, available_count } = req.body;
+  try {
+    const result = await db.query(
+      'INSERT INTO rooms (hostel_id, name, photo_url, description, occupancy_limit, available, created_at, available_count) VALUES ($1, $2, $3, $4, $5, $6, $7, $8) RETURNING *',
+      [hostel_id, name, photo_url, description, occupancy_limit, available, created_at, available_count]
+    );
+    res.json(result.rows[0]);
+  } catch (err) {
+    res.status(500).json({ error: err.message });
+  }
 };
+
+module.exports = { getRooms, createRoom };
