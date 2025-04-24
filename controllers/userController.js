@@ -5,7 +5,7 @@ const jwt = require('jsonwebtoken');
 // Register a new user
 exports.registerUser = async (req, res) => {
   try {
-    const { name, email, phone, password } = req.body;
+    const { name, email, phone, password, role } = req.body;
 
     // Check if the user already exists
     const userExists = await db.query('SELECT * FROM users WHERE email = $1', [email]);
@@ -18,8 +18,8 @@ exports.registerUser = async (req, res) => {
 
     // Insert the user into the database
     await db.query(
-      'INSERT INTO users (name, email, phone, password) VALUES ($1, $2, $3, $4)',
-      [name, email, phone, hashedPassword]
+      'INSERT INTO users (name, email, phone, password, role) VALUES ($1, $2, $3, $4, $5)',
+      [name, email, hashedPassword, role || 'student']
     );
 
     res.status(201).json({ message: 'User registered successfully' });
@@ -47,7 +47,7 @@ exports.loginUser = async (req, res) => {
     }
 
     // Generate a JWT token
-    const token = jwt.sign({ id: user.id, email: user.email }, process.env.JWT_SECRET, {
+    const token = jwt.sign({ id: user.id, email: user.email, role: user.role }, process.env.JWT_SECRET, {
       expiresIn: '1h',
     });
 
@@ -61,7 +61,7 @@ exports.loginUser = async (req, res) => {
 exports.getUserProfile = async (req, res) => {
   try {
     const userId = req.user.id; // Assuming user ID is available in req.user
-    const userResult = await db.query('SELECT id, name, phone, email FROM users WHERE id = $1', [userId]);
+    const userResult = await db.query('SELECT id, name, email, role FROM users WHERE id = $1', [userId]);
     const user = userResult.rows[0];
 
     if (!user) {
