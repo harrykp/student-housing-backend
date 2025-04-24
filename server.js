@@ -15,26 +15,17 @@ app.use(express.static(path.join(__dirname, 'public')));
 const hostelsRoute = require('./routes/hostels');
 const roomsRoute = require('./routes/rooms');
 const applicationsRoute = require('./routes/applications');
-const applicationRoute = require('./routes/application');
-const dashboardRoute = require('./routes/dashboard');
-const registerRoute = require('./routes/register'); // New route for student registration
-const authRoute = require('./routes/auth'); // New route for authentication
-const housingRoute = require('./routes/housing'); // New route for housing options
 const activityLogsRoute = require('./routes/activityLogs');
 const notificationsRoute = require('./routes/notifications');
-
+const usersRoute = require('./routes/users');
 
 
 app.use('/api/hostels', hostelsRoute);
 app.use('/api/rooms', roomsRoute);
 app.use('/api/applications', applicationsRoute);
-app.use('/api/application', applicationRoute);
-app.use('/api/dashboard', dashboardRoute);
-app.use('/api/register', registerRoute); // Register new endpoint
-app.use('/api/auth', authRoute); // Register new endpoint
-app.use('/api/housing', housingRoute); // Register new endpoint
 app.use('/api/activity-logs', activityLogsRoute);
 app.use('/api/notifications', notificationsRoute);
+app.use('/api/users', usersRoute);
 
 // Health Check
 app.get('/', (req, res) => {
