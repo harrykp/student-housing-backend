@@ -17,7 +17,7 @@ const roomsRoute = require('./routes/rooms');
 const applicationsRoute = require('./routes/applications');
 const applicationRoute = require('./routes/application');
 const dashboardRoute = require('./routes/dashboard');
-const studentsRoute = require('./routes/students'); // New route for student registration
+const usersRoute = require('./routes/users'); // New route for student registration
 const authRoute = require('./routes/auth'); // New route for authentication
 const housingRoute = require('./routes/housing'); // New route for housing options
 const activityLogsRoute = require('./routes/activityLogs');
@@ -28,7 +28,7 @@ app.use('/api/rooms', roomsRoute);
 app.use('/api/applications', applicationsRoute);
 app.use('/api/application', applicationRoute);
 app.use('/api/dashboard', dashboardRoute);
-app.use('/api/students', studentsRoute); // Register new endpoint
+app.use('/api/users', usersRoute); // Register new endpoint
 app.use('/api/auth', authRoute); // Register new endpoint
 app.use('/api/housing', housingRoute); // Register new endpoint
 app.use('/api/activity-logs', activityLogsRoute);
