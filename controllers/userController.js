@@ -5,10 +5,10 @@ const jwt = require('jsonwebtoken');
 // Register a new user
 exports.registerUser = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
+    const { name, email, phone, password } = req.body;
 
     // Check if the user already exists
-    const userExists = await db.query('SELECT * FROM students WHERE email = $1', [email]);
+    const userExists = await db.query('SELECT * FROM users WHERE email = $1', [email]);
     if (userExists.rows.length > 0) {
       return res.status(400).json({ error: 'User already exists' });
     }
@@ -18,8 +18,8 @@ exports.registerUser = async (req, res) => {
 
     // Insert the user into the database
     await db.query(
-      'INSERT INTO students (name, email, password) VALUES ($1, $2, $3)',
-      [name, email, hashedPassword]
+      'INSERT INTO users (name, email, phone, password) VALUES ($1, $2, $3, $4)',
+      [name, email, phone, hashedPassword]
     );
 
     res.status(201).json({ message: 'User registered successfully' });
@@ -34,7 +34,7 @@ exports.loginUser = async (req, res) => {
     const { email, password } = req.body;
 
     // Check if the user exists
-    const userResult = await db.query('SELECT * FROM students WHERE email = $1', [email]);
+    const userResult = await db.query('SELECT * FROM users WHERE email = $1', [email]);
     const user = userResult.rows[0];
     if (!user) {
       return res.status(404).json({ error: 'User not found' });
@@ -61,7 +61,7 @@ exports.loginUser = async (req, res) => {
 exports.getUserProfile = async (req, res) => {
   try {
     const userId = req.user.id; // Assuming user ID is available in req.user
-    const userResult = await db.query('SELECT id, name, email FROM students WHERE id = $1', [userId]);
+    const userResult = await db.query('SELECT id, name, phone, email FROM users WHERE id = $1', [userId]);
     const user = userResult.rows[0];
 
     if (!user) {

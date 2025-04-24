@@ -1,11 +1,9 @@
 const express = require('express');
+const { getApplications, createApplication } = require('../controllers/applicationsController');
 const router = express.Router();
-const { submitApplication, updateApplicationStatus } = require('../controllers/applicationsController');
 
-// Route for submitting a housing application
-router.post('/', submitApplication);
-
-// Route for updating application status (for admins)
-router.put('/status', updateApplicationStatus);
+// Routes for applications
+router.get('/', getApplications);
+router.post('/', createApplication);
 
 module.exports = router;
