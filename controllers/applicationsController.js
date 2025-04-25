@@ -12,11 +12,11 @@ const getApplications = async (req, res) => {
 
 // Create a new application
 const createApplication = async (req, res) => {
-  const { student_id, room_id, status, applied_at, room_preference, personal_details, notified } = req.body;
+  const { user_id, room_id, status, applied_at, room_preference, personal_details, notified } = req.body;
   try {
     const result = await db.query(
-      'INSERT INTO applications (student_id, room_id, status, applied_at, room_preference, personal_details, notified) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
-      [student_id, room_id, status, applied_at, room_preference, personal_details, notified]
+      'INSERT INTO applications (user_id, room_id, status, applied_at, room_preference, personal_details, notified) VALUES ($1, $2, $3, $4, $5, $6, $7) RETURNING *',
+      [user_id, room_id, status, applied_at, room_preference, personal_details, notified]
     );
     res.json(result.rows[0]);
   } catch (err) {
