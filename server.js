@@ -19,6 +19,8 @@ const activityLogsRoute = require('./routes/activityLogs');
 const notificationsRoute = require('./routes/notifications');
 const usersRoute = require('./routes/users');
 const dashboardRoute = require('./routes/dashboard'); // NEW: Dashboard route
+const adminRoute = require('./routes/admin');
+
 
 app.use('/api/hostels', hostelsRoute);
 app.use('/api/rooms', roomsRoute);
@@ -27,6 +29,8 @@ app.use('/api/activity-logs', activityLogsRoute);
 app.use('/api/notifications', notificationsRoute);
 app.use('/api/users', usersRoute);
 app.use('/api/dashboard', dashboardRoute); // NEW: Dashboard route
+app.use('/api/admin', adminRoute);
+
 
 // Health Check
 app.get('/', (req, res) => {
