@@ -6,7 +6,7 @@ const bcrypt = require('bcrypt');
     console.log('Seeding database...');
     // Truncate all tables
     console.log('Clearing existing data...');
-    await db.query('TRUNCATE TABLE hostels, rooms, students, applications RESTART IDENTITY CASCADE');
+    await db.query('TRUNCATE TABLE hostels, rooms, users, applications RESTART IDENTITY CASCADE');
 
     // 1. Insert example hostels
     console.log('Seeding hostels...');
@@ -42,21 +42,21 @@ const bcrypt = require('bcrypt');
     console.log('Seeding students...');
     const hashedPassword = await bcrypt.hash('password123', 10);
     await db.query(`
-      INSERT INTO students (name, email, password)
+      INSERT INTO users (name, email, phone, password, role)
       VALUES 
-        ($1, $2, $3),
-        ($4, $5, $6),
-        ($7, $8, $9)
+        ($1, $2, $3, $4, $5),
+        ($6, $7, $8, $9, $10),
+        ($11, $12, $13, $14, $15)
     `, [
-      'Apryl Poku', 'apryl@example.com', hashedPassword,
-      'Linda Osei', 'linda@example.com', hashedPassword,
-      'Kofi Kinatta', 'kofi@example.com', hashedPassword
+      'Apryl Poku', 'apryl@example.com', '1325477789', hashedPassword, 'student'
+      'Linda Osei', 'linda@example.com', '7778913254', hashedPassword, 'student'
+      'Kofi Kinatta', 'kofi@example.com','7778254913', hashedPassword, 'student'
     ]);
 
     // 4. Insert example applications
     console.log('Seeding applications...');
     await db.query(`
-      INSERT INTO applications (student_id, room_id, status, applied_at)
+      INSERT INTO applications (user_id, room_id, status, applied_at)
       VALUES
         ($1, $2, $3, NOW()),
         ($4, $5, $6, NOW()),
@@ -71,13 +71,13 @@ const bcrypt = require('bcrypt');
     console.log('Seeding admins...');
     const hashedAdminPassword = await bcrypt.hash('admin123', 10);
     await db.query(`
-      INSERT INTO admins (name, email, password, role)
+      INSERT INTO users (name, email, phone, password, role)
       VALUES 
-        ($1, $2, $3, $4),
-        ($5, $6, $7, $8)
+        ($1, $2, $3, $4, $5),
+        ($6, $7, $8, $9, $10)
     `, [
-      'Admin User', 'admin@example.com', hashedAdminPassword, 'admin',
-      'Manager User', 'manager@example.com', hashedAdminPassword, 'manager'
+      'Admin User', 'admin@example.com', '123456789', hashedAdminPassword, 'admin',
+      'Manager User', 'manager@example.com', '987654321' hashedAdminPassword, 'manager'
     ]);
 
     console.log('Database seeding completed successfully!');

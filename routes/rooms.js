@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const { getRooms, addRoom, getOccupants } = require('../controllers/roomController');
+const { getRooms, createRoom, getOccupants } = require('../controllers/roomsController');
 
 // Route to get all rooms
 router.get('/', getRooms);
 
 // Route to add a new room
-router.post('/', addRoom);
+router.post('/', createRoom);
 
 // Route to get occupants of a room
 router.get('/:roomId/occupants', getOccupants);
