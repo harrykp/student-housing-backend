@@ -1,29 +1,35 @@
-const db = require('../db/db');
+// controllers/authController.js
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');  // needed for creating JWTs
+const pool = require('../db/db');
 
-// Controller for logging in
-const login = async (req, res) => {
-    const { email, password, role } = req.body;
-
-    if (!email || !password || !role) {
-        return res.status(400).json({ message: 'All fields are required.' });
+async function loginUser(req, res) {
+  try {
+    const { email, password } = req.body;
+    const result = await pool.query(
+      'SELECT id, username, password FROM users WHERE email = $1',
+      [email]
+    );
+    if (result.rows.length === 0) {
+      return res.status(401).json({ error: 'Invalid credentials' });
     }
 
-    try {
-        const table = role === 'admin' ? 'admins' : 'students';
-
-        // Check if email exists and password matches
-        const user = await db.query(`SELECT * FROM ${table} WHERE email = $1 AND password = $2`, [email, password]);
-        if (user.rows.length === 0) {
-            return res.status(401).json({ message: 'Invalid credentials.' });
-        }
-
-        res.status(200).json({ message: 'Login successful.', user: user.rows[0] });
-    } catch (error) {
-        console.error('Error logging in:', error.message);
-        res.status(500).json({ message: 'Server error.' });
+    const user = result.rows[0];
+    const match = await bcrypt.compare(password, user.password);
+    if (!match) {
+      return res.status(401).json({ error: 'Invalid credentials' });
     }
-};
 
-module.exports = {
-    login,
-};
+    const token = jwt.sign(
+      { id: user.id, username: user.username },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' }
+    );
+    res.json({ token });
+  } catch (err) {
+    console.error('loginUser error:', err);
+    res.status(500).json({ error: err.message });
+  }
+}
+
+module.exports = { loginUser };
