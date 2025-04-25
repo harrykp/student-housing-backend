@@ -28,5 +28,5 @@ const registerUser = async (req, res) => {
 };
 
 module.exports = {
-    registerStudent,
+    registerUser,
 };
