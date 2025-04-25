@@ -15,18 +15,14 @@ async function getUsers(req, res) {
 }
 
 async function createUser(req, res) {
-  try {
-    const { username, email, password } = req.body;
-    const hashed = await bcrypt.hash(password, 10);
-    const result = await pool.query(
-      'INSERT INTO users (username, email, password) VALUES ($1, $2, $3) RETURNING id, username, email',
-      [username, email, hashed]
-    );
-    res.status(201).json(result.rows[0]);
-  } catch (err) {
-    console.error('createUser error:', err);
-    res.status(500).json({ error: err.message });
-  }
+  const { username, email, phone, password } = req.body;
+  const hashed = await bcrypt.hash(password, 10);
+  const result = await pool.query(
+    `INSERT INTO users (username, email, phone, password)
+     VALUES ($1, $2, $3, $4) RETURNING id, username, email`,
+    [username, email, phone, hashed]
+  );
+  res.status(201).json(result.rows[0]);
 }
-
 module.exports = { getUsers, createUser };
+
