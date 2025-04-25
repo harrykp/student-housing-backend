@@ -48,7 +48,7 @@ exports.getDashboard = async (req, res) => {
 // Apply for housing
 exports.applyForHousing = async (req, res) => {
     try {
-        const { usertId, roomId, roomPreference, personalDetails } = req.body;
+        const { userId, roomId, roomPreference, personalDetails } = req.body;
 
         const applicationQuery = `
             INSERT INTO applications (user_id, room_id, room_preference, personal_details)
