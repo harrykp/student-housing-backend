@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
-const dashboardController = require('../controllers/dashboardController');
+const { getDashboard } = require('../controllers/dashboardController');
 
-// Fetch dashboard data for students
-router.get('/', dashboardController.getDashboard);
+// GET /api/dashboard → protected dashboard data
+router.get('/', getDashboard);
 
 // Apply for housing
 router.post('/apply', dashboardController.applyForHousing);
