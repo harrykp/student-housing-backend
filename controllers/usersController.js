@@ -73,3 +73,13 @@ exports.getUserProfile = async (req, res) => {
     res.status(500).json({ error: 'Failed to fetch user profile' });
   }
 };
+
+//Get Users
+exports.getUsers = async (req, res) => {
+    try {
+        const result = await db.query('SELECT id, name, email, role FROM users');
+        res.status(200).json(result.rows);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch users' });
+    }
+};
