@@ -19,7 +19,7 @@ exports.registerUser = async (req, res) => {
     // Insert the user into the database
     await db.query(
       'INSERT INTO users (name, email, phone, password, role) VALUES ($1, $2, $3, $4, $5)',
-      [name, email, hashedPassword, role || 'student']
+      [name, email, phone, hashedPassword, role || 'student']
     );
 
     res.status(201).json({ message: 'User registered successfully' });
