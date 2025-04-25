@@ -1,4 +1,4 @@
-const db = require('../db');
+const db = require('../db/db');
 
 // Function to fetch all rooms
 const getRooms = async (req, res) => {
