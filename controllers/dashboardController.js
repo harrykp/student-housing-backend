@@ -4,15 +4,13 @@ const Joi = require('joi'); // Add Joi for validation
 // Fetch dashboard data for students
 exports.getDashboard = async (req, res) => {
     try {
-        // Ensure req.user exists and contains id
         if (!req.user || !req.user.id) {
             return res.status(401).json({ error: 'Unauthorized access' });
         }
 
         const userId = req.user.id;
 
-        // Parallel database queries for performance optimization
-        const [profileResult, applicationsResult, assignedRoomsResult, notificationsResult] = await Promise.all([
+        const [profileResult, applicationsResult, assignedRoomsResult, notificationsResult, statsResult, hostelsResult, activitiesResult] = await Promise.all([
             pool.query('SELECT name, email FROM users WHERE id = $1', [userId]),
             pool.query(`
                 SELECT r.name AS room, a.status, a.applied_at
@@ -29,16 +27,35 @@ exports.getDashboard = async (req, res) => {
                 FROM notifications
                 WHERE user_id = $1 AND user_role = 'student'
                 ORDER BY created_at DESC`, [userId]),
+            pool.query(`
+                SELECT COUNT(*) AS total, 
+                       SUM(CASE WHEN status = 'Pending' THEN 1 ELSE 0 END) AS pending,
+                       SUM(CASE WHEN status = 'Accepted' THEN 1 ELSE 0 END) AS accepted,
+                       SUM(CASE WHEN status = 'Rejected' THEN 1 ELSE 0 END) AS rejected
+                FROM applications
+                WHERE user_id = $1`, [userId]),
+            pool.query(`
+                SELECT name, address
+                FROM hostels`),
+            pool.query(`
+                SELECT description
+                FROM activities
+                WHERE user_id = $1
+                ORDER BY created_at DESC
+                LIMIT 10`, [userId])
         ]);
 
         res.status(200).json({
             profile: profileResult.rows[0],
+            stats: statsResult.rows[0],
             applications: applicationsResult.rows,
             assignedRooms: assignedRoomsResult.rows,
             notifications: notificationsResult.rows,
+            hostels: hostelsResult.rows,
+            activities: activitiesResult.rows.map(row => row.description)
         });
     } catch (error) {
-        console.error('Error fetching dashboard data:', error.stack); // Log stack trace
+        console.error('Error fetching dashboard data:', error.stack);
         res.status(500).json({ error: 'Unable to fetch dashboard data. Please try again later.' });
     }
 };
