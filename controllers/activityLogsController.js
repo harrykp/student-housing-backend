@@ -37,7 +37,23 @@ const getActivityLogs = async (req, res) => {
     }
 };
 
+
+//Create activity logs
+const createActivityLog = async (req, res) => {
+    try {
+        const { actorId, actorRole, action, details } = req.body;
+        await db.query(
+            'INSERT INTO activity_logs (actor_id, actor_role, action, details) VALUES ($1, $2, $3, $4)',
+            [actorId, actorRole, action, details]
+        );
+        res.status(201).json({ message: 'Activity log created successfully.' });
+    } catch (error) {
+        console.error('Error creating activity log:', error.message);
+        res.status(500).json({ message: 'Failed to create activity log.' });
+    }
+};
 module.exports = {
     addActivityLog,
     getActivityLogs,
+    createActivityLog,
 };
