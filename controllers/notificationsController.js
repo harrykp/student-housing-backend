@@ -1,4 +1,4 @@
-const db = require('../db');
+const db = require('../db/db');
 
 // Get all notifications
 const getNotifications = async (req, res) => {
