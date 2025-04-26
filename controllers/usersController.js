@@ -8,11 +8,14 @@ const pool   = require('../db/db');
  */
 async function getUsers(req, res) {
   try {
-    const result = await pool.query('SELECT id, username, email, phone FROM users');
+    // alias "name" → "username" so front-end still sees .username
+    const result = await pool.query(
+      'SELECT id, name AS username, email, phone FROM users'
+    );
     res.json(result.rows);
   } catch (err) {
     console.error('getUsers error:', err);
-    res.status(500).json({ error: 'Failed to fetch users.' });
+    res.status(500).json({ error: err.message });
   }
 }
 
@@ -22,15 +25,16 @@ async function getUsers(req, res) {
 async function createUser(req, res) {
   try {
     const { username, email, phone, password } = req.body;
+
     if (!username || !email || !phone || !password) {
       return res.status(400).json({ error: 'All fields are required.' });
     }
 
     const hashed = await bcrypt.hash(password, 10);
     const insertQuery = `
-      INSERT INTO users (username, email, phone, password)
+      INSERT INTO users (name, email, phone, password)
       VALUES ($1, $2, $3, $4)
-      RETURNING id, username, email, phone
+      RETURNING id, name AS username, email, phone
     `;
     const values = [username, email, phone, hashed];
 
@@ -39,7 +43,7 @@ async function createUser(req, res) {
 
   } catch (err) {
     console.error('createUser error:', err);
-    // if it's a unique-constraint violation on email
+    // handle unique-email violation
     if (err.code === '23505') {
       return res.status(409).json({ error: 'Email already in use.' });
     }
